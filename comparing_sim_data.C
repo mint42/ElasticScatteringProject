@@ -9,7 +9,9 @@
 #include "TCanvas.h"
 #include "TMath.h"
 
-#define SYM_FILE "../sim/worksim/test.root"
+using namespace std;
+
+#define SIM_FILE "../sim/worksim/test.root"
 
 #define EXP_FILE "hms_files/Pion_hms_replay_production_12080_-1.root"
 // #define EXP_FILE "hms_files/Pion_hms_replay_production_12083_-1.root"
@@ -21,8 +23,8 @@
 // #define EXP_FILE "hms_files/Pion_hms_replay_production_13857_-1.root"
 
 #define NUM_VARS 2
-static const char	**sim_var_names = [ "hsxfp", "hsyfp" ];
-static const char	**exp_var_names = [	"H.dc.x.fp", "H.dc.y.fp" ];
+static const char	*sim_var_names[] = { "hsxfp", "hsyfp" };
+static const char	*exp_var_names[] = {	"H.dc.x.fp", "H.dc.y.fp" };
 
 //										"hsxpfp",
 //										"hsypfp",
@@ -35,7 +37,7 @@ static const char	**exp_var_names = [	"H.dc.x.fp", "H.dc.y.fp" ];
 //										"hsxptar",
 //										"hsytar"
 
-static THStack	*load_comparison_hist(TTree *exp_tree, TTree *sim_tree, char *hist_name, String exp_var, String sim_var)
+static THStack	*load_comparison_hist(TTree *exp_tree, TTree *sim_tree, const char *hist_name, string exp_var, string sim_var)
 {
 	// draw var with "graph off". " >> hist" writes to a histogram in the gDir
 	// middle string is for cuts. needs ">> hist" too if a cut is present
@@ -73,7 +75,7 @@ void 			comparing_sim_data()
 
 	
 	// load_*(hist name, exp variable's name, sim variable's name)
-	THStack		*xfp_hist = load_comparison_hist(exp_data, "hist name", exp_var_names[0], sim_var_names[0]);
+	THStack		*xfp_hist = load_comparison_hist(exp_tree, sim_tree, "xfp", exp_var_names[0], sim_var_names[0]);
 
 	xfp_hist->Draw("NOSTACK"); // don't stack them
 }
