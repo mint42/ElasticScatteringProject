@@ -11,16 +11,19 @@
 
 using namespace std;
 
-#define SIM_FILE "../sim/worksim/test.root"
+#define SIM_FILE "sim_outfiles/test3.root"
+#define EXP_FILE "hms_files/Pion_hms_replay_production_13092_-1.root"
 
-#define EXP_FILE "hms_files/Pion_hms_replay_production_12080_-1.root"
+// All files
+// #define EXP_FILE "hms_files/Pion_hms_replay_production_12080_-1.root"
 // #define EXP_FILE "hms_files/Pion_hms_replay_production_12083_-1.root"
 // #define EXP_FILE "hms_files/Pion_hms_replay_production_13092_-1.root"
-// #define EXP_FILE "hms_files/Pion_hms_replay_production_13094_-1.root"
 // #define EXP_FILE "hms_files/Pion_hms_replay_production_13133_-1.root"
-// #define EXP_FILE "hms_files/Pion_hms_replay_production_13136_-1.root"
 // #define EXP_FILE "hms_files/Pion_hms_replay_production_13854_-1.root"
-// #define EXP_FILE "hms_files/Pion_hms_replay_production_13857_-1.root"
+
+// #define EXP_FILE "hms_files/Pion_hms_replay_production_13094_-1.root" DUMMY
+// #define EXP_FILE "hms_files/Pion_hms_replay_production_13136_-1.root" DUMMY
+// #define EXP_FILE "hms_files/Pion_hms_replay_production_13857_-1.root" DUMMY
 
 #define NUM_VARS 8
 static const char	*hist_names[] = {	"x focal plane",
@@ -47,8 +50,8 @@ static const char	*sim_var_names[] = {"hsxfp",
 
 //"H.dc.x"
 //"H.dc.y"
-static const char	*exp_var_names[] = {"H.dc.x.fp",
-										"H.dc.y.fp",
+static const char	*exp_var_names[] = {"H.dc.x_fp",
+										"H.dc.y_fp",
 										"H.dc.xp_fp",
 										"H.dc.yp_fp",
 										"H.kin.primary.nu",
@@ -81,7 +84,6 @@ static THStack	*load_comparison_hist(TTree *exp_tree, TTree *sim_tree, const cha
 
 void 			comparing_sim_data()
 {
-
 	// loads the root files
 	TFile		*exp_data = TFile::Open(EXP_FILE);
 	TFile		*sim_data = TFile::Open(SIM_FILE);
