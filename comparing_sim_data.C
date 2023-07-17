@@ -22,21 +22,39 @@ using namespace std;
 // #define EXP_FILE "hms_files/Pion_hms_replay_production_13854_-1.root"
 // #define EXP_FILE "hms_files/Pion_hms_replay_production_13857_-1.root"
 
-#define NUM_VARS 2
-static const char	*hist_names[] = { "x focal plane", "y focal plane" };
-static const char	*sim_var_names[] = { "hsxfp", "hsyfp" };
-static const char	*exp_var_names[] = {	"H.dc.x.fp", "H.dc.y.fp" };
+#define NUM_VARS 8
+static const char	*hist_names[] = {	"x focal plane",
+										"y focal plane",
+										"xp focal plane",
+										"yp focal plane",
+										"nu",
+										"Q^2",
+										"W",
+										"epsilon"};
 
-//										"hsxpfp",
-//										"hsypfp",
-//										"nu",
-//										"Q2",
-//										"W",
-//										"epsilon"];
-//										"hsdelta",
-//										"hsyptar",
-//										"hsxptar",
-//										"hsytar"
+//"hsdelta",
+//"hsyptar",
+//"hsxptar",
+//"hsytar"
+static const char	*sim_var_names[] = {"hsxfp",
+										"hsyfp",
+										"hsxpfp",
+										"hsypfp",
+										"nu",
+										"Q2",
+										"W",
+										"epsilon"};
+
+//"H.dc.x"
+//"H.dc.y"
+static const char	*exp_var_names[] = {"H.dc.x.fp",
+										"H.dc.y.fp",
+										"H.dc.xp_fp",
+										"H.dc.yp_fp",
+										"H.kin.primary.nu",
+										"H.kin.primary.Q2",
+										"H.kin.primary.W",
+										"H.kin.primary.epsilon"};
 
 static THStack	*load_comparison_hist(TTree *exp_tree, TTree *sim_tree, const char *hist_name, string exp_var, string sim_var)
 {
