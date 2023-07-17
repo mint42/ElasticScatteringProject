@@ -23,6 +23,7 @@ using namespace std;
 // #define EXP_FILE "hms_files/Pion_hms_replay_production_13857_-1.root"
 
 #define NUM_VARS 2
+static const char	*hist_names[] = { "x focal plane", "y focal plane" };
 static const char	*sim_var_names[] = { "hsxfp", "hsyfp" };
 static const char	*exp_var_names[] = {	"H.dc.x.fp", "H.dc.y.fp" };
 
@@ -62,6 +63,7 @@ static THStack	*load_comparison_hist(TTree *exp_tree, TTree *sim_tree, const cha
 
 void 			comparing_sim_data()
 {
+
 	// loads the root files
 	TFile		*exp_data = TFile::Open(EXP_FILE);
 	TFile		*sim_data = TFile::Open(SIM_FILE);
@@ -73,9 +75,18 @@ void 			comparing_sim_data()
 	TTree		*sim_tree;
 	sim_data->GetObject("h10", sim_tree);
 
-	
-	// load_*(hist name, exp variable's name, sim variable's name)
-	THStack		*xfp_hist = load_comparison_hist(exp_tree, sim_tree, "xfp", exp_var_names[0], sim_var_names[0]);
+	TCanvas		c1; // for saving drawings
 
-	xfp_hist->Draw("NOSTACK"); // don't stack them
+	for (size_t i = 0; i < NUM_VARS; ++i)
+	{
+		THStack		*hist = load_comparison_hist(exp_tree, sim_tree, hist_names[i], exp_var_names[i], sim_var_names[i]);
+
+		hist->Draw("NOSTACK"); // don't stack them
+		if (i == 0)
+			c1.Print("c1.pdf(");
+		else if (i == NUM_VARS - 1)
+			c1.Print("c1.pdf)");
+		else
+			c1.Print("c1.pdf");
+	}
 }
