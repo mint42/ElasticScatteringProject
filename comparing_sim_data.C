@@ -32,7 +32,8 @@ using namespace std;
 #define LOW_LIM(i)		stoi(info[i][4])	// also converts to number
 #define UP_LIM(i)		stoi(info[i][5])	// also converts to number
 
-void 			comparing_sim_data()
+// root 'comparing_sim_data("filename") <- to run from commandline
+void 			comparing_sim_data(string pdf_name = "c1")
 {
 	// hist name, simulated data's variable name, experimental data's variable name, cuts, lower bound, upper bound
 	string	info[8][6] = {	"x focal plane",	"hsxfp",	"H.dc.x_fp",				"",			"-20",	"20",
@@ -83,13 +84,13 @@ void 			comparing_sim_data()
 		comparison_hist->GetXaxis()->SetLimits(LOW_LIM(i), UP_LIM(i));
 	
 		if (NUM_VARS == 1)
-			c1.Print("c1.pdf");
+			c1.Print((pdf_name + ".pdf").c_str());
 		else if (i == 0)
-			c1.Print("c1.pdf("); // keep pdf open
+			c1.Print((pdf_name + ".pdf(").c_str()); // keep pdf open
 		else if (i == NUM_VARS - 1)
-			c1.Print("c1.pdf)"); // close pdf
+			c1.Print((pdf_name + ".pdf)").c_str()); // close pdf
 		else
-			c1.Print("c1.pdf");
+			c1.Print((pdf_name + ".pdf").c_str());
 
 		delete comparison_hist;
 	}
