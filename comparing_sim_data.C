@@ -25,64 +25,22 @@ using namespace std;
 // #define EXP_FILE "hms_files/Pion_hms_replay_production_13857_-1.root" DUMMY
 
 #define NUM_VARS 8
-static const char	*hist_names[] = {	"x focal plane",
-										"y focal plane",
-										"xp focal plane",
-										"yp focal plane",
-										"nu",
-										"Q^2",
-										"W",
-										"epsilon"};
-
-//"hsdelta",
-//"hsyptar",
-//"hsxptar",
-//"hsytar"
-static const char	*sim_var_names[] = {"hsxfp",
-										"hsyfp",
-										"hsxpfp",
-										"hsypfp",
-										"nu",
-										"Q2",
-										"W",
-										"epsilon"};
-
-//"H.dc.x"
-//"H.dc.y"
-static const char	*exp_var_names[] = {"H.dc.x_fp",
-										"H.dc.y_fp",
-										"H.dc.xp_fp",
-										"H.dc.yp_fp",
-										"H.kin.primary.nu",
-										"H.kin.primary.Q2",
-										"H.kin.primary.W",
-										"H.kin.primary.epsilon"};
-
-static THStack	*load_comparison_hist(TTree *exp_tree, TTree *sim_tree, const char *hist_name, string exp_var, string sim_var)
-{
-	// draw var with "graph off". " >> hist" writes to a histogram in the gDir
-	// middle string is for cuts. needs ">> hist" too if a cut is present
-	exp_tree->Draw((exp_var + " >> hist").c_str(), "", "goff");
-	TH1D	*exp_hist = (TH1D*)gDirectory->Get("hist"); // grab hist
-
-	sim_tree->Draw((sim_var + " >> hist2").c_str(), "", "goff");
-	TH1D	*sim_hist = (TH1D*)gDirectory->Get("hist2");
-
-	// set color
-	exp_hist->SetLineColor(kBlue);
-	sim_hist->SetLineColor(kRed);
-
-	// class to plot multiple histograms together THStack(name, title)
-	THStack	*hs = new THStack("hists", hist_name);
-
-	// add hists to the stack and plot together
-	hs->Add(exp_hist);
-	hs->Add(sim_hist);
-	return (hs);
-}
+#define HIST_NAMES(i)	info[i][0]
+#define SIM_VARS(i)		info[i][1]
+#define EXP_VARS(i)		info[i][2]
+#define CUTS(i)			info[i][3]
 
 void 			comparing_sim_data()
 {
+	string	info[8][4] = {	"x focal plane",	"hsxfp",	"H.dc.x_fp",				"",
+                  			"y focal plane",	"hsyfp",	"H.dc.y_fp",				"",
+                  			"xp focal plane",	"hsxpfp",	"H.dc.xp_fp",				"",
+                  			"yp focal plane",	"hsypfp",	"H.dc.yp_fp",				"",
+                  			"nu",				"nu",		"H.kin.primary.nu",			"",
+                  			"Q^2",				"Q2",		"H.kin.primary.Q2",			"",
+                  			"W",				"W",		"H.kin.primary.W",			" >= 0 ",
+              				"epsilon", 			"epsilon",	"H.kin.primary.epsilon",	""};
+
 	// loads the root files
 	TFile		*exp_data = TFile::Open(EXP_FILE);
 	TFile		*sim_data = TFile::Open(SIM_FILE);
@@ -98,14 +56,35 @@ void 			comparing_sim_data()
 
 	for (size_t i = 0; i < NUM_VARS; ++i)
 	{
-		THStack		*hist = load_comparison_hist(exp_tree, sim_tree, hist_names[i], exp_var_names[i], sim_var_names[i]);
+		// class to plot multiple histograms together THStack(name, title)
+		THStack	*comparison_hist = new THStack("hists", (HIST_NAMES(i)).c_str());
 
-		hist->Draw("NOSTACK"); // don't stack them
+		// draw var with "graph off". " >> hist" writes to a histogram in the gDir
+		// middle string is for cuts.
+		if (CUTS(i) == "")
+			exp_tree->Draw((EXP_VARS(i) + " >> hist").c_str(), "", "goff");
+		else
+			exp_tree->Draw((EXP_VARS(i) + " >> hist").c_str(), (EXP_VARS(i) + CUTS(i)).c_str(), "goff");
+		TH1D	*exp_hist = (TH1D*)gDirectory->Get("hist"); // grab hist
+		exp_hist->SetLineColor(kBlue); // set color
+		comparison_hist->Add(exp_hist);	// add hist to stack
+
+		if (CUTS(i) == "")
+			sim_tree->Draw((SIM_VARS(i) + " >> hist2").c_str(), "", "goff");
+		else
+			sim_tree->Draw((SIM_VARS(i) + " >> hist2").c_str(), (SIM_VARS(i) + CUTS(i)).c_str(), "goff");
+		TH1D	*sim_hist = (TH1D*)gDirectory->Get("hist2");
+		sim_hist->SetLineColor(kRed);
+		comparison_hist->Add(sim_hist);
+
+		comparison_hist->Draw("NOSTACK"); // don't stack them
 		if (i == 0)
-			c1.Print("c1.pdf(");
+			c1.Print("c1.pdf("); // keep pdf open
 		else if (i == NUM_VARS - 1)
-			c1.Print("c1.pdf)");
+			c1.Print("c1.pdf)"); // close pdf
 		else
 			c1.Print("c1.pdf");
+
+		delete comparison_hist;
 	}
 }
