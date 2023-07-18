@@ -81,6 +81,9 @@ void 			comparing_sim_data()
 		comparison_hist->Draw("NOSTACK"); // don't stack them
 		comparison_hist->GetXaxis()->SetLimits(LOW_LIM(i), UP_LIM(i));
 	
+		if (NUM_VARS == 1)
+			c1.Print("c1.pdf");
+		else if (i == 0)
 			c1.Print("c1.pdf("); // keep pdf open
 		else if (i == NUM_VARS - 1)
 			c1.Print("c1.pdf)"); // close pdf
