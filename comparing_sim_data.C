@@ -62,7 +62,6 @@ void 			comparing_sim_data()
 		THStack	*comparison_hist = new THStack("hists", (HIST_NAMES(i)).c_str());
 
 		// draw var with "graph off". " >> hist" writes to a histogram in the gDir
-		// middle string is for cuts.
 		if (CUTS(i) == "")
 			exp_tree->Draw((EXP_VARS(i) + " >> hist").c_str(), "", "goff");
 		else
