@@ -1,5 +1,4 @@
-// This program draws the pre and post cut histograms on the same plot with
-// different colors
+// This program compares simulated results to experimental data
 
 #include <string>
 #include "TFile.h"
