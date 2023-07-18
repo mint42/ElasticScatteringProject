@@ -34,6 +34,7 @@ using namespace std;
 
 void 			comparing_sim_data()
 {
+	// hist name, simulated data's variable name, experimental data's variable name, cuts, lower bound, upper bound
 	string	info[8][6] = {	"x focal plane",	"hsxfp",	"H.dc.x_fp",				"",			"-20",	"20",
                   			"y focal plane",	"hsyfp",	"H.dc.y_fp",				"",			"-20",	"20",
                   			"xp focal plane",	"hsxpfp",	"H.dc.xp_fp",				"",			"-20",	"20",
