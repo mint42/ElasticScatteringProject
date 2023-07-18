@@ -43,7 +43,7 @@ void 			comparing_sim_data(string pdf_name = "c1")
                   			"nu",				"nu",		"H.kin.primary.nu",			"",			"0",	"10",
                   			"Q^2",				"Q2",		"H.kin.primary.Q2",			"",			"0",	"10",
                   			"W",				"W",		"H.kin.primary.W",			" >= 0 ",	"0",	"10",
-              				"epsilon", 			"epsilon",	"H.kin.primary.epsilon",	"",			"0",	"10"};
+              				"epsilon", 			"epsilon",	"H.kin.primary.epsilon",	"",			"0",	"2"};
 
 	// loads the root files
 	TFile		*exp_data = TFile::Open(EXP_FILE);
@@ -65,23 +65,25 @@ void 			comparing_sim_data(string pdf_name = "c1")
 
 		// draw var with "graph off". " >> hist" writes to a histogram in the gDir
 		if (CUTS(i) == "")
-			exp_tree->Draw((EXP_VARS(i) + " >> hist").c_str(), "", "goff");
+			exp_tree->Draw((EXP_VARS(i) + " >> hist(1000)").c_str(), "", "goff");
 		else
-			exp_tree->Draw((EXP_VARS(i) + " >> hist").c_str(), (EXP_VARS(i) + CUTS(i)).c_str(), "goff");
+			exp_tree->Draw((EXP_VARS(i) + " >> hist(1000)").c_str(), (EXP_VARS(i) + CUTS(i)).c_str(), "goff");
 		TH1D	*exp_hist = (TH1D*)gDirectory->Get("hist"); // grab hist
 		exp_hist->SetLineColor(kBlue); // set color
 		comparison_hist->Add(exp_hist);	// add hist to stack
 
 		if (CUTS(i) == "")
-			sim_tree->Draw((SIM_VARS(i) + " >> hist2").c_str(), "", "goff");
+			sim_tree->Draw((SIM_VARS(i) + " >> hist2(1000)").c_str(), "", "goff");
 		else
-			sim_tree->Draw((SIM_VARS(i) + " >> hist2").c_str(), (SIM_VARS(i) + CUTS(i)).c_str(), "goff");
+			sim_tree->Draw((SIM_VARS(i) + " >> hist2(1000)").c_str(), (SIM_VARS(i) + CUTS(i)).c_str(), "goff");
 		TH1D	*sim_hist = (TH1D*)gDirectory->Get("hist2");
 		sim_hist->SetLineColor(kRed);
 		comparison_hist->Add(sim_hist);
 
 		comparison_hist->Draw("NOSTACK"); // don't stack them
 		comparison_hist->GetXaxis()->SetLimits(LOW_LIM(i), UP_LIM(i));
+		c1.SetLogy();		
+
 	
 		if (NUM_VARS == 1)
 			c1.Print((pdf_name + ".pdf").c_str());
