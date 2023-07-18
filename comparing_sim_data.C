@@ -29,17 +29,19 @@ using namespace std;
 #define SIM_VARS(i)		info[i][1]
 #define EXP_VARS(i)		info[i][2]
 #define CUTS(i)			info[i][3]
+#define LOW_LIM(i)		stoi(info[i][4])	// also converts to number
+#define UP_LIM(i)		stoi(info[i][5])	// also converts to number
 
 void 			comparing_sim_data()
 {
-	string	info[8][4] = {	"x focal plane",	"hsxfp",	"H.dc.x_fp",				"",
-                  			"y focal plane",	"hsyfp",	"H.dc.y_fp",				"",
-                  			"xp focal plane",	"hsxpfp",	"H.dc.xp_fp",				"",
-                  			"yp focal plane",	"hsypfp",	"H.dc.yp_fp",				"",
-                  			"nu",				"nu",		"H.kin.primary.nu",			"",
-                  			"Q^2",				"Q2",		"H.kin.primary.Q2",			"",
-                  			"W",				"W",		"H.kin.primary.W",			" >= 0 ",
-              				"epsilon", 			"epsilon",	"H.kin.primary.epsilon",	""};
+	string	info[8][6] = {	"x focal plane",	"hsxfp",	"H.dc.x_fp",				"",			"-20",	"20",
+                  			"y focal plane",	"hsyfp",	"H.dc.y_fp",				"",			"-20",	"20",
+                  			"xp focal plane",	"hsxpfp",	"H.dc.xp_fp",				"",			"-20",	"20",
+                  			"yp focal plane",	"hsypfp",	"H.dc.yp_fp",				"",			"-20",	"20",
+                  			"nu",				"nu",		"H.kin.primary.nu",			"",			"0",	"10",
+                  			"Q^2",				"Q2",		"H.kin.primary.Q2",			"",			"0",	"10",
+                  			"W",				"W",		"H.kin.primary.W",			" >= 0 ",	"0",	"10",
+              				"epsilon", 			"epsilon",	"H.kin.primary.epsilon",	"",			"0",	"10"};
 
 	// loads the root files
 	TFile		*exp_data = TFile::Open(EXP_FILE);
@@ -78,7 +80,8 @@ void 			comparing_sim_data()
 		comparison_hist->Add(sim_hist);
 
 		comparison_hist->Draw("NOSTACK"); // don't stack them
-		if (i == 0)
+		comparison_hist->GetXaxis()->SetLimits(LOW_LIM(i), UP_LIM(i));
+	
 			c1.Print("c1.pdf("); // keep pdf open
 		else if (i == NUM_VARS - 1)
 			c1.Print("c1.pdf)"); // close pdf
