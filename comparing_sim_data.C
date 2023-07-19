@@ -10,8 +10,8 @@
 
 using namespace std;
 
-#define SIM_FILE "sim_outfiles/test3.root"
-#define EXP_FILE "hms_files/Pion_hms_replay_production_13092_-1.root"
+#define SIM_FILE "../sim/worksim/run_13133.root"
+#define EXP_FILE "hms_files/Pion_hms_replay_production_13133_-1.root"
 
 // All files
 // #define EXP_FILE "hms_files/Pion_hms_replay_production_12080_-1.root"
@@ -29,8 +29,8 @@ using namespace std;
 #define SIM_VARS(i)		info[i][1]
 #define EXP_VARS(i)		info[i][2]
 #define CUTS(i)			info[i][3]
-#define LOW_LIM(i)		stoi(info[i][4])	// also converts to number
-#define UP_LIM(i)		stoi(info[i][5])	// also converts to number
+#define LOW_LIM(i)		stod(info[i][4])	// also converts to number
+#define UP_LIM(i)		stod(info[i][5])	// also converts to number
 
 // root 'comparing_sim_data("filename") <- to run from commandline
 void 			comparing_sim_data(string pdf_name = "c1")
@@ -38,8 +38,8 @@ void 			comparing_sim_data(string pdf_name = "c1")
 	// hist name, simulated data's variable name, experimental data's variable name, cuts, lower bound, upper bound
 	string	info[8][6] = {	"x focal plane",	"hsxfp",	"H.dc.x_fp",				"",			"-20",	"20",
                   			"y focal plane",	"hsyfp",	"H.dc.y_fp",				"",			"-20",	"20",
-                  			"xp focal plane",	"hsxpfp",	"H.dc.xp_fp",				"",			"-20",	"20",
-                  			"yp focal plane",	"hsypfp",	"H.dc.yp_fp",				"",			"-20",	"20",
+                  			"xp focal plane",	"hsxpfp",	"H.dc.xp_fp",				"",			"-.25",	".25",
+                  			"yp focal plane",	"hsypfp",	"H.dc.yp_fp",				"",			"-.25",	".25",
                   			"nu",				"nu",		"H.kin.primary.nu",			"",			"0",	"10",
                   			"Q^2",				"Q2",		"H.kin.primary.Q2",			"",			"0",	"10",
                   			"W",				"W",		"H.kin.primary.W",			" >= 0 ",	"0",	"10",
