@@ -95,6 +95,15 @@ void 			comparing_sim_data(string pdf_name = "c1")
 		comparison_hist->Draw("NOSTACK");
 		comparison_hist->GetXaxis()->SetLimits(LOW_LIM(i), UP_LIM(i));
 		c1.SetLogy();		
+
+		// finding and drawing the peaks
+		double		sim_peak = sim_hist->GetBinCenter(sim_hist->GetMaximumBin());
+		double		exp_peak = exp_hist->GetBinCenter(exp_hist->GetMaximumBin());
+		TLine		*exp_max = new TLine(exp_peak, 0, exp_peak, exp_hist->GetMaximum() * 1.2);
+		TLine		*sim_max = new TLine(sim_peak, 0, sim_peak, sim_hist->GetMaximum() * 1.2);
+		sim_max->Draw();
+		exp_max->Draw();
+
 		if (NUM_VARS_PRINT == 1) // edge case
 			c1.Print((pdf_name + ".pdf").c_str());
 		else if (i == 0)
