@@ -26,6 +26,7 @@ using namespace std;
 
 #define NUM_BINS 500
 #define NUM_VARS 11
+#define NUM_VARS_PRINT 1
 #define NUM_PARAMS 5
 #define HIST_NAMES(i)	info[i][0]
 #define SIM_VARS(i)	info[i][1]
@@ -72,21 +73,10 @@ void 			comparing_sim_data(string pdf_name = "c1")
 
 	string		exp_cut = "";
 	string		sim_cut = "";
-	for (size_t i = 0; i < NUM_VARS; ++i)
+	for (size_t i = 0; i < NUM_VARS_PRINT; ++i)
 	{
 		// class to plot multiple histograms together THStack(name, title)
 		THStack	*comparison_hist = new THStack("hists", (HIST_NAMES(i)).c_str());
-
-		if (MIN_CUTS(i) == "" && MAX_CUTS(i) == "")
-		{
-			exp_cut = "";
-			sim_cut = "";
-		}
-		else
-		{
-			exp_cut = MIN_CUTS(i) + EXP_VARS(i) + "&&" + EXP_VARS(i)+ MAX_CUTS(i);
-			sim_cut = MIN_CUTS(i) + SIM_VARS(i) + "&&" + SIM_VARS(i)+ MAX_CUTS(i);
-		}
 
 		// draw vars with "graph off". " >> hist" writes to a histogram in the gDir
 		exp_tree->Draw((EXP_VARS(i) + " >> hist(NUM_BINS)").c_str(), exp_cut.c_str(), "goff");
@@ -108,8 +98,7 @@ void 			comparing_sim_data(string pdf_name = "c1")
 		comparison_hist->Draw("NOSTACK");
 		comparison_hist->GetXaxis()->SetLimits(LOW_LIM(i), UP_LIM(i));
 		c1.SetLogy();		
-	
-		if (NUM_VARS == 1) // edge case
+		if (NUM_VARS_PRINT == 1) // edge case
 			c1.Print((pdf_name + ".pdf").c_str());
 		else if (i == 0)
 			c1.Print((pdf_name + ".pdf(").c_str()); // keep pdf open
