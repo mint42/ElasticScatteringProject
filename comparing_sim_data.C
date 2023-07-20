@@ -25,25 +25,27 @@ using namespace std;
 // #define EXP_FILE "hms_files/Pion_hms_replay_production_13857_-1.root" DUMMY
 
 #define NUM_VARS 8
+#define NUM_PARAMS 7
 #define HIST_NAMES(i)	info[i][0]
-#define SIM_VARS(i)		info[i][1]
-#define EXP_VARS(i)		info[i][2]
-#define CUTS(i)			info[i][3]
-#define LOW_LIM(i)		stod(info[i][4])	// also converts to number
-#define UP_LIM(i)		stod(info[i][5])	// also converts to number
+#define SIM_VARS(i)	info[i][1]
+#define EXP_VARS(i)	info[i][2]
+#define MIN_CUTS(i)	info[i][3]
+#define MAX_CUTS(i)	info[i][4]
+#define LOW_LIM(i)	stod(info[i][5])	// also converts to number
+#define UP_LIM(i)	stod(info[i][6])	// also converts to number
 
 // root 'comparing_sim_data("filename") <- to run from commandline
 void 			comparing_sim_data(string pdf_name = "c1")
 {
-	// hist name, simulated data's variable name, experimental data's variable name, cuts, lower bound, upper bound
-	string	info[8][6] = {	"x focal plane",	"hsxfp",	"H.dc.x_fp",				"",			"-20",	"20",
-                  			"y focal plane",	"hsyfp",	"H.dc.y_fp",				"",			"-20",	"20",
-                  			"xp focal plane",	"hsxpfp",	"H.dc.xp_fp",				"",			"-.25",	".25",
-                  			"yp focal plane",	"hsypfp",	"H.dc.yp_fp",				"",			"-.25",	".25",
-                  			"nu",				"nu",		"H.kin.primary.nu",			"",			"0",	"10",
-                  			"Q^2",				"Q2",		"H.kin.primary.Q2",			"",			"0",	"10",
-                  			"W",				"W",		"H.kin.primary.W",			" >= 0 ",	"0",	"10",
-              				"epsilon", 			"epsilon",	"H.kin.primary.epsilon",	"",			"0",	"2"};
+	// hist name, simulated data's variable name, experimental data's variable name, min cut, max cut, lower bound, upper bound
+	string	info[8][7] = {"x focal plane",  "hsxfp",   "H.dc.x_fp",             "",    "",    "-20",  "20",
+                              "y focal plane",  "hsyfp",   "H.dc.y_fp",             "",    "",    "-20",  "20",
+                              "xp focal plane", "hsxpfp",  "H.dc.xp_fp",            "",    "",    "-.25", ".25",
+                              "yp focal plane", "hsypfp",  "H.dc.yp_fp",            "",    "",    "-.25", ".25",
+                              "nu",             "nu",      "H.kin.primary.nu",      "",    "",    "0",    "10",
+                              "Q^2",            "Q2",      "H.kin.primary.Q2",      "",    "",    "0",    "10",
+                              "W",              "W",       "H.kin.primary.W",       "0<=", ">=1", "0",    "10",
+                              "epsilon",        "epsilon", "H.kin.primary.epsilon", "",    "",    "0",    "2"};
 
 	// loads the root files
 	TFile		*exp_data = TFile::Open(EXP_FILE);
@@ -67,7 +69,7 @@ void 			comparing_sim_data(string pdf_name = "c1")
 		if (CUTS(i) == "")
 			exp_tree->Draw((EXP_VARS(i) + " >> hist(1000)").c_str(), "", "goff");
 		else
-			exp_tree->Draw((EXP_VARS(i) + " >> hist(1000)").c_str(), (EXP_VARS(i) + CUTS(i)).c_str(), "goff");
+			exp_tree->Draw((EXP_VARS(i) + " >> hist(1000)").c_str(), (MIN_CUTS(i) + EXP_VARS(i) + MAX_CUTS(i)).c_str(), "goff");
 		TH1D	*exp_hist = (TH1D*)gDirectory->Get("hist"); // grab hist
 		exp_hist->SetLineColor(kBlue); // set color
 		comparison_hist->Add(exp_hist);	// add hist to stack
@@ -75,7 +77,7 @@ void 			comparing_sim_data(string pdf_name = "c1")
 		if (CUTS(i) == "")
 			sim_tree->Draw((SIM_VARS(i) + " >> hist2(1000)").c_str(), "", "goff");
 		else
-			sim_tree->Draw((SIM_VARS(i) + " >> hist2(1000)").c_str(), (SIM_VARS(i) + CUTS(i)).c_str(), "goff");
+			sim_tree->Draw((SIM_VARS(i) + " >> hist2(1000)").c_str(), (MIN_CUTS(i) + SIM_VARS(i) + MAX_CUTS(i)).c_str(), "goff");
 		TH1D	*sim_hist = (TH1D*)gDirectory->Get("hist2");
 		sim_hist->SetLineColor(kRed);
 		comparison_hist->Add(sim_hist);
