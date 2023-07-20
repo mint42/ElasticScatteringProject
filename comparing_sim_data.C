@@ -70,9 +70,6 @@ void 			comparing_sim_data(string pdf_name = "c1")
 	sim_data->GetObject("h10", sim_tree);
 
 	TCanvas		c1; // for saving drawings
-
-	string		exp_cut = "";
-	string		sim_cut = "";
 	for (size_t i = 0; i < NUM_VARS_PRINT; ++i)
 	{
 		// class to plot multiple histograms together THStack(name, title)
