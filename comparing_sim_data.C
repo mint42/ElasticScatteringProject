@@ -24,7 +24,8 @@ using namespace std;
 // #define EXP_FILE "hms_files/Pion_hms_replay_production_13136_-1.root" DUMMY
 // #define EXP_FILE "hms_files/Pion_hms_replay_production_13857_-1.root" DUMMY
 
-#define NUM_VARS 8
+#define NUM_BINS 500
+#define NUM_VARS 11
 #define NUM_PARAMS 7
 #define HIST_NAMES(i)	info[i][0]
 #define SIM_VARS(i)	info[i][1]
@@ -38,14 +39,20 @@ using namespace std;
 void 			comparing_sim_data(string pdf_name = "c1")
 {
 	// hist name, simulated data's variable name, experimental data's variable name, min cut, max cut, lower bound, upper bound
-	string	info[8][7] = {"x focal plane",  "hsxfp",   "H.dc.x_fp",             "",    "",    "-20",  "20",
-                              "y focal plane",  "hsyfp",   "H.dc.y_fp",             "",    "",    "-20",  "20",
-                              "xp focal plane", "hsxpfp",  "H.dc.xp_fp",            "",    "",    "-.25", ".25",
-                              "yp focal plane", "hsypfp",  "H.dc.yp_fp",            "",    "",    "-.25", ".25",
-                              "nu",             "nu",      "H.kin.primary.nu",      "",    "",    "0",    "10",
-                              "Q^2",            "Q2",      "H.kin.primary.Q2",      "",    "",    "0",    "10",
-                              "W",              "W",       "H.kin.primary.W",       "0<=", "<=1", "0",    "10",
-                              "epsilon",        "epsilon", "H.kin.primary.epsilon", "",    "",    "0",    "2"};
+	string	info[NUM_VARS][NUM_PARAMS] =
+	{
+        "x focal plane",    "hsxfp",   "H.dc.x_fp",             "",     "",       "-20",  "20",
+        "y focal plane",    "hsyfp",   "H.dc.y_fp",             "",     "",       "-20",  "20",
+        "xp focal plane",   "hsxpfp",  "H.dc.xp_fp",            "",     "",       "-.25", ".25",
+        "yp focal plane",   "hsypfp",  "H.dc.yp_fp",            "",     "",       "-.25", ".25",
+        "target hrz angle", "hsxptar", "H.gtr.ph",              "",     "",       "-2",   "2",
+        "target vrt angle", "hsyptar", "H.gtr.th",              "",     "",       "-2",   "2",
+        "delta",            "hsdelta", "H.gtr.dp",              "",     "",       "-10",  "10",
+        "nu",               "nu",      "H.kin.primary.nu",      "",     "",       "0",    "10",
+        "W",                "W",       "H.kin.primary.W",       ".5<=", "<=1.3",  "0",    "2",
+        "Q^2",              "Q2",      "H.kin.primary.Q2",      "",     "",       "0",    "10",
+        "epsilon",          "epsilon", "H.kin.primary.epsilon", "",     "",       "0",    "2"
+	};
 
 	// loads the root files
 	TFile		*exp_data = TFile::Open(EXP_FILE);
@@ -60,6 +67,8 @@ void 			comparing_sim_data(string pdf_name = "c1")
 
 	TCanvas		c1; // for saving drawings
 
+	string		exp_cut = "";
+	string		sim_cut = "";
 	for (size_t i = 0; i < NUM_VARS; ++i)
 	{
 		// class to plot multiple histograms together THStack(name, title)
@@ -67,25 +76,33 @@ void 			comparing_sim_data(string pdf_name = "c1")
 
 		if (MIN_CUTS(i) == "" && MAX_CUTS(i) == "")
 		{
-			// draw var with "graph off". " >> hist" writes to a histogram in the gDir
-			exp_tree->Draw((EXP_VARS(i) + " >> hist(1000)").c_str(), "", "goff");
-			sim_tree->Draw((SIM_VARS(i) + " >> hist2(1000)").c_str(), "", "goff");
+			exp_cut = "";
+			sim_cut = "";
 		}
 		else
 		{
-			const char	*exp_cut = (MIN_CUTS(i) + EXP_VARS(i) + "&&" + EXP_VARS(i)+ MAX_CUTS(i)).c_str();
-			exp_tree->Draw((EXP_VARS(i) + " >> hist(1000)").c_str(), exp_cut, "goff");
-			const char	*sim_cut = (MIN_CUTS(i) + SIM_VARS(i) + "&&" + SIM_VARS(i)+ MAX_CUTS(i)).c_str();
-			sim_tree->Draw((SIM_VARS(i) + " >> hist2(1000)").c_str(), sim_cut, "goff");
+			exp_cut = MIN_CUTS(i) + EXP_VARS(i) + "&&" + EXP_VARS(i)+ MAX_CUTS(i);
+			sim_cut = MIN_CUTS(i) + SIM_VARS(i) + "&&" + SIM_VARS(i)+ MAX_CUTS(i);
 		}
-		TH1D	*exp_hist = (TH1D*)gDirectory->Get("hist"); // grab hists
+
+		// draw vars with "graph off". " >> hist" writes to a histogram in the gDir
+		exp_tree->Draw((EXP_VARS(i) + " >> hist(NUM_BINS)").c_str(), exp_cut.c_str(), "goff");
+		sim_tree->Draw((SIM_VARS(i) + " >> hist2(NUM_BINS)").c_str(), sim_cut.c_str(), "goff");
+
+		// grab hists
+		TH1D	*exp_hist = (TH1D*)gDirectory->Get("hist");
 		TH1D	*sim_hist = (TH1D*)gDirectory->Get("hist2");
-		exp_hist->SetLineColor(kBlue); // set colors
+
+		// set colors
+		exp_hist->SetLineColor(kBlue);
 		sim_hist->SetLineColor(kRed);
-		comparison_hist->Add(exp_hist);	// add hists to stack
+
+		// add hists to stack
+		comparison_hist->Add(exp_hist);
 		comparison_hist->Add(sim_hist);
 
-		comparison_hist->Draw("NOSTACK"); // don't stack them
+		// draw
+		comparison_hist->Draw("NOSTACK");
 		comparison_hist->GetXaxis()->SetLimits(LOW_LIM(i), UP_LIM(i));
 		c1.SetLogy();		
 	
