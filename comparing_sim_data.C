@@ -44,7 +44,7 @@ void 			comparing_sim_data(string pdf_name = "c1")
                               "yp focal plane", "hsypfp",  "H.dc.yp_fp",            "",    "",    "-.25", ".25",
                               "nu",             "nu",      "H.kin.primary.nu",      "",    "",    "0",    "10",
                               "Q^2",            "Q2",      "H.kin.primary.Q2",      "",    "",    "0",    "10",
-                              "W",              "W",       "H.kin.primary.W",       "0<=", ">=1", "0",    "10",
+                              "W",              "W",       "H.kin.primary.W",       "0<=", "<=1", "0",    "10",
                               "epsilon",        "epsilon", "H.kin.primary.epsilon", "",    "",    "0",    "2"};
 
 	// loads the root files
@@ -73,8 +73,10 @@ void 			comparing_sim_data(string pdf_name = "c1")
 		}
 		else
 		{
-			exp_tree->Draw((EXP_VARS(i) + " >> hist(1000)").c_str(), (MIN_CUTS(i) + EXP_VARS(i) + MAX_CUTS(i)).c_str(), "goff");
-			sim_tree->Draw((SIM_VARS(i) + " >> hist2(1000)").c_str(), (MIN_CUTS(i) + SIM_VARS(i) + MAX_CUTS(i)).c_str(), "goff");
+			const char	*exp_cut = (MIN_CUTS(i) + EXP_VARS(i) + "&&" + EXP_VARS(i)+ MAX_CUTS(i)).c_str();
+			exp_tree->Draw((EXP_VARS(i) + " >> hist(1000)").c_str(), exp_cut, "goff");
+			const char	*sim_cut = (MIN_CUTS(i) + SIM_VARS(i) + "&&" + SIM_VARS(i)+ MAX_CUTS(i)).c_str();
+			sim_tree->Draw((SIM_VARS(i) + " >> hist2(1000)").c_str(), sim_cut, "goff");
 		}
 		TH1D	*exp_hist = (TH1D*)gDirectory->Get("hist"); // grab hists
 		TH1D	*sim_hist = (TH1D*)gDirectory->Get("hist2");
