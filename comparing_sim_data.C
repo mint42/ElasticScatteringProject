@@ -65,29 +65,29 @@ void 			comparing_sim_data(string pdf_name = "c1")
 		// class to plot multiple histograms together THStack(name, title)
 		THStack	*comparison_hist = new THStack("hists", (HIST_NAMES(i)).c_str());
 
-		// draw var with "graph off". " >> hist" writes to a histogram in the gDir
-		if (CUTS(i) == "")
+		if (MIN_CUTS(i) == "" && MAX_CUTS(i) == "")
+		{
+			// draw var with "graph off". " >> hist" writes to a histogram in the gDir
 			exp_tree->Draw((EXP_VARS(i) + " >> hist(1000)").c_str(), "", "goff");
-		else
-			exp_tree->Draw((EXP_VARS(i) + " >> hist(1000)").c_str(), (MIN_CUTS(i) + EXP_VARS(i) + MAX_CUTS(i)).c_str(), "goff");
-		TH1D	*exp_hist = (TH1D*)gDirectory->Get("hist"); // grab hist
-		exp_hist->SetLineColor(kBlue); // set color
-		comparison_hist->Add(exp_hist);	// add hist to stack
-
-		if (CUTS(i) == "")
 			sim_tree->Draw((SIM_VARS(i) + " >> hist2(1000)").c_str(), "", "goff");
+		}
 		else
+		{
+			exp_tree->Draw((EXP_VARS(i) + " >> hist(1000)").c_str(), (MIN_CUTS(i) + EXP_VARS(i) + MAX_CUTS(i)).c_str(), "goff");
 			sim_tree->Draw((SIM_VARS(i) + " >> hist2(1000)").c_str(), (MIN_CUTS(i) + SIM_VARS(i) + MAX_CUTS(i)).c_str(), "goff");
+		}
+		TH1D	*exp_hist = (TH1D*)gDirectory->Get("hist"); // grab hists
 		TH1D	*sim_hist = (TH1D*)gDirectory->Get("hist2");
+		exp_hist->SetLineColor(kBlue); // set colors
 		sim_hist->SetLineColor(kRed);
+		comparison_hist->Add(exp_hist);	// add hists to stack
 		comparison_hist->Add(sim_hist);
 
 		comparison_hist->Draw("NOSTACK"); // don't stack them
 		comparison_hist->GetXaxis()->SetLimits(LOW_LIM(i), UP_LIM(i));
 		c1.SetLogy();		
-
 	
-		if (NUM_VARS == 1)
+		if (NUM_VARS == 1) // edge case
 			c1.Print((pdf_name + ".pdf").c_str());
 		else if (i == 0)
 			c1.Print((pdf_name + ".pdf(").c_str()); // keep pdf open
