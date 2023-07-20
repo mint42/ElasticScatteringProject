@@ -26,14 +26,12 @@ using namespace std;
 
 #define NUM_BINS 500
 #define NUM_VARS 11
-#define NUM_PARAMS 7
+#define NUM_PARAMS 5
 #define HIST_NAMES(i)	info[i][0]
 #define SIM_VARS(i)	info[i][1]
 #define EXP_VARS(i)	info[i][2]
-#define MIN_CUTS(i)	info[i][3]
-#define MAX_CUTS(i)	info[i][4]
-#define LOW_LIM(i)	stod(info[i][5])	// also converts to number
-#define UP_LIM(i)	stod(info[i][6])	// also converts to number
+#define LOW_LIM(i)	stod(info[i][3])	// also converts to number
+#define UP_LIM(i)	stod(info[i][4])	// also converts to number
 
 // root 'comparing_sim_data("filename") <- to run from commandline
 void 			comparing_sim_data(string pdf_name = "c1")
@@ -41,18 +39,23 @@ void 			comparing_sim_data(string pdf_name = "c1")
 	// hist name, simulated data's variable name, experimental data's variable name, min cut, max cut, lower bound, upper bound
 	string	info[NUM_VARS][NUM_PARAMS] =
 	{
-        "x focal plane",    "hsxfp",   "H.dc.x_fp",             "",     "",       "-20",  "20",
-        "y focal plane",    "hsyfp",   "H.dc.y_fp",             "",     "",       "-40",  "40",
-        "xp focal plane",   "hsxpfp",  "H.dc.xp_fp",            "",     "",       "-.25", ".25",
-        "yp focal plane",   "hsypfp",  "H.dc.yp_fp",            "",     "",       "-.25", ".25",
-        "target hrz angle", "hsxptar", "H.gtr.ph",              "",     "",       "-1",   "1",
-        "target vrt angle", "hsyptar", "H.gtr.th",              "",     "",       "-1.5", 1.5",
-        "delta",            "hsdelta", "H.gtr.dp",              "",     "",       "-15",  "15",
-        "nu",               "nu",      "H.kin.primary.nu",      "",     "",       "0",    "10",
-        "W",                "W",       "H.kin.primary.W",       ".5<=", "<=1.3",  "0",    "2",
-        "Q^2",              "Q2",      "H.kin.primary.Q2",      "",     "",       "0",    "10",
-        "epsilon",          "epsilon", "H.kin.primary.epsilon", "",     "",       "0",    "1"
+        "W",                "W",       "H.kin.primary.W",       "0",    "2",
+        "x focal plane",    "hsxfp",   "H.dc.x_fp",             "-40",  "40",
+        "y focal plane",    "hsyfp",   "H.dc.y_fp",             "-40",  "40",
+        "xp focal plane",   "hsxpfp",  "H.dc.xp_fp",            "-.25", ".25",
+        "yp focal plane",   "hsypfp",  "H.dc.yp_fp",            "-.25", ".25",
+        "target hrz angle", "hsxptar", "H.gtr.ph",              "-1",   "1",
+        "target vrt angle", "hsyptar", "H.gtr.th",              "-1.5", "1.5",
+        "delta",            "hsdelta", "H.gtr.dp",              "-15",  "15",
+        "nu",               "nu",      "H.kin.primary.nu",      "0",    "10",
+        "Q^2",              "Q2",      "H.kin.primary.Q2",      "0",    "10",
+        "epsilon",          "epsilon", "H.kin.primary.epsilon", "0",    "1"
 	};
+
+	// string	exp_cut = "";
+	// string	sim_cut = "";
+	string	exp_cut = "0 < H.kin.primary.W && H.kin.primary.W < 1.1";
+	string	sim_cut = "0 < W && W < 1.1";
 
 	// loads the root files
 	TFile		*exp_data = TFile::Open(EXP_FILE);
