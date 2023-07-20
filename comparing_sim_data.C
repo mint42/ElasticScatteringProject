@@ -104,6 +104,17 @@ void 			comparing_sim_data(string pdf_name = "c1")
 		sim_max->Draw();
 		exp_max->Draw();
 
+		TLegend		*leg = new TLegend();
+		string		num_events("# events: ");
+		leg->AddEntry(exp_hist, (num_events + to_string((int)exp_hist->GetEntries()) + " (exp)").c_str());
+		leg->AddEntry(sim_hist, (num_events + to_string((int)sim_hist->GetEntries()) + " (sim)").c_str());
+
+		string		peak("peak: ");
+		leg->AddEntry(exp_hist, (peak + to_string(exp_peak) + " (sim)").c_str());
+		leg->AddEntry(sim_hist, (peak + to_string(sim_peak) + " (sim)").c_str());
+
+		leg->Draw();
+
 		if (NUM_VARS_PRINT == 1) // edge case
 			c1.Print((pdf_name + ".pdf").c_str());
 		else if (i == 0)
