@@ -42,16 +42,16 @@ void 			comparing_sim_data(string pdf_name = "c1")
 	string	info[NUM_VARS][NUM_PARAMS] =
 	{
         "x focal plane",    "hsxfp",   "H.dc.x_fp",             "",     "",       "-20",  "20",
-        "y focal plane",    "hsyfp",   "H.dc.y_fp",             "",     "",       "-20",  "20",
+        "y focal plane",    "hsyfp",   "H.dc.y_fp",             "",     "",       "-40",  "40",
         "xp focal plane",   "hsxpfp",  "H.dc.xp_fp",            "",     "",       "-.25", ".25",
         "yp focal plane",   "hsypfp",  "H.dc.yp_fp",            "",     "",       "-.25", ".25",
-        "target hrz angle", "hsxptar", "H.gtr.ph",              "",     "",       "-2",   "2",
-        "target vrt angle", "hsyptar", "H.gtr.th",              "",     "",       "-2",   "2",
-        "delta",            "hsdelta", "H.gtr.dp",              "",     "",       "-10",  "10",
+        "target hrz angle", "hsxptar", "H.gtr.ph",              "",     "",       "-1",   "1",
+        "target vrt angle", "hsyptar", "H.gtr.th",              "",     "",       "-1.5", 1.5",
+        "delta",            "hsdelta", "H.gtr.dp",              "",     "",       "-15",  "15",
         "nu",               "nu",      "H.kin.primary.nu",      "",     "",       "0",    "10",
         "W",                "W",       "H.kin.primary.W",       ".5<=", "<=1.3",  "0",    "2",
         "Q^2",              "Q2",      "H.kin.primary.Q2",      "",     "",       "0",    "10",
-        "epsilon",          "epsilon", "H.kin.primary.epsilon", "",     "",       "0",    "2"
+        "epsilon",          "epsilon", "H.kin.primary.epsilon", "",     "",       "0",    "1"
 	};
 
 	// loads the root files
