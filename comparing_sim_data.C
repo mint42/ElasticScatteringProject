@@ -11,12 +11,12 @@
 using namespace std;
 
 // Real Runs: 12080 12083 13092 13133 13137 13854
-// Dummy Runs: 13094 13136 13857 <- dont have simulation files
+// Dummy Runs: 13094 13136 13857
 // run 13137 is broken
 
 #define NUM_BINS 500
-#define NUM_VARS 11
-#define NUM_VARS_PRINT 11
+#define NUM_VARS 12
+#define NUM_VARS_PRINT 12
 #define NUM_PARAMS 5
 #define HIST_NAMES(i) info[i][0]
 #define SIM_VARS(i)   info[i][1]
@@ -27,20 +27,23 @@ using namespace std;
 // root 'comparing_sim_data("filename") <- to run from commandline
 void 			comparing_sim_data(string run_number, string pdf_name = "c1")
 {
+	string	moms((stoi(run_number) > 12083) ? "5.202" : "5.9"); // momentums from logbook
+
 	// hist name, simulated data's variable name, experimental data's variable name, min cut, max cut, lower bound, upper bound
 	string	info[NUM_VARS][NUM_PARAMS] =
 	{
-        "W",                "W",       "H.kin.primary.W",       "0",    "2",
-        "x focal plane",    "hsxfp",   "H.dc.x_fp",             "-40",  "40",
-        "y focal plane",    "hsyfp",   "H.dc.y_fp",             "-40",  "40",
-        "xp focal plane",   "hsxpfp",  "H.dc.xp_fp",            "-.25", ".25",
-        "yp focal plane",   "hsypfp",  "H.dc.yp_fp",            "-.25", ".25",
-        "target hrz angle", "hsxptar", "H.gtr.ph",              "-1",   "1",
-        "target vrt angle", "hsyptar", "H.gtr.th",              "-1.5", "1.5",
-        "delta",            "hsdelta", "H.gtr.dp",              "-15",  "15",
-        "nu",               "nu",      "H.kin.primary.nu",      "0",    "10",
-        "Q^2",              "Q2",      "H.kin.primary.Q2",      "0",    "10",
-        "epsilon",          "epsilon", "H.kin.primary.epsilon", "0",    "1"
+        "W",                "W",               "H.kin.primary.W",       "0",    "2",
+        "P",                "hsdelta*" + moms, "H.gtr.dp*" + moms,      "-15",  "15",
+        "delta",            "hsdelta",         "H.gtr.dp",              "-15",  "15",
+        "x focal plane",    "hsxfp",           "H.dc.x_fp",             "-40",  "40",
+        "y focal plane",    "hsyfp",           "H.dc.y_fp",             "-40",  "40",
+        "xp focal plane",   "hsxpfp",          "H.dc.xp_fp",            "-.25", ".25",
+        "yp focal plane",   "hsypfp",          "H.dc.yp_fp",            "-.25", ".25",
+        "target hrz angle", "hsxptar",         "H.gtr.ph",              "-1",   "1",
+        "target vrt angle", "hsyptar",         "H.gtr.th",              "-1.5", "1.5",
+        "nu",               "nu",              "H.kin.primary.nu",      "0",    "10",
+        "Q^2",              "Q2",              "H.kin.primary.Q2",      "0",    "10",
+        "epsilon",          "epsilon",         "H.kin.primary.epsilon", "0",    "1"
 	};
 
 	string	exp_cut = "(H.kin.primary.W - 0.938) < 0.04";
