@@ -110,8 +110,8 @@ void 			comparing_sim_data(string pdf_name = "c1")
 		leg->AddEntry(sim_hist, (num_events + to_string((int)sim_hist->GetEntries()) + " (sim)").c_str());
 
 		string		peak("peak: ");
-		leg->AddEntry(exp_hist, (peak + to_string(exp_peak) + " (sim)").c_str());
-		leg->AddEntry(sim_hist, (peak + to_string(sim_peak) + " (sim)").c_str());
+		leg->AddEntry(exp_hist, (peak + to_string(exp_peak)).c_str());
+		leg->AddEntry(sim_hist, (peak + to_string(sim_peak)).c_str());
 
 		leg->Draw();
 
