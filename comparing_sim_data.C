@@ -13,26 +13,19 @@ using namespace std;
 #define SIM_FILE "../sim/worksim/run_13133.root"
 #define EXP_FILE "hms_files/Pion_hms_replay_production_13133_-1.root"
 
-// All files
-// #define EXP_FILE "hms_files/Pion_hms_replay_production_12080_-1.root"
-// #define EXP_FILE "hms_files/Pion_hms_replay_production_12083_-1.root"
-// #define EXP_FILE "hms_files/Pion_hms_replay_production_13092_-1.root"
-// #define EXP_FILE "hms_files/Pion_hms_replay_production_13133_-1.root"
-// #define EXP_FILE "hms_files/Pion_hms_replay_production_13854_-1.root"
-
-// #define EXP_FILE "hms_files/Pion_hms_replay_production_13094_-1.root" DUMMY
-// #define EXP_FILE "hms_files/Pion_hms_replay_production_13136_-1.root" DUMMY
-// #define EXP_FILE "hms_files/Pion_hms_replay_production_13857_-1.root" DUMMY
+// Real Runs: 12080 12083 13092 13133 13137 13854
+// Dummy Runs: 13094 13136 13857 <- dont have simulation files
+// run 13137 is broken
 
 #define NUM_BINS 500
 #define NUM_VARS 11
 #define NUM_VARS_PRINT 11
 #define NUM_PARAMS 5
-#define HIST_NAMES(i)	info[i][0]
-#define SIM_VARS(i)	info[i][1]
-#define EXP_VARS(i)	info[i][2]
-#define LOW_LIM(i)	stod(info[i][3])	// also converts to number
-#define UP_LIM(i)	stod(info[i][4])	// also converts to number
+#define HIST_NAMES(i) info[i][0]
+#define SIM_VARS(i)   info[i][1]
+#define EXP_VARS(i)   info[i][2]
+#define LOW_LIM(i)    stod(info[i][3])	// also converts to number
+#define UP_LIM(i)     stod(info[i][4])	// also converts to number
 
 // root 'comparing_sim_data("filename") <- to run from commandline
 void 			comparing_sim_data(string pdf_name = "c1")
@@ -53,8 +46,6 @@ void 			comparing_sim_data(string pdf_name = "c1")
         "epsilon",          "epsilon", "H.kin.primary.epsilon", "0",    "1"
 	};
 
-	// string	exp_cut = "";
-	// string	sim_cut = "";
 	string	exp_cut = "(H.kin.primary.W - 0.938) < 0.04";
 	string	sim_cut = "(W - 0.938) < 0.04";
 
