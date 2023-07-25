@@ -14,6 +14,8 @@ using namespace std;
 // Dummy Runs: 13094 13136 13857
 // run 13137 is broken
 
+#define NUM_FILES 5
+#define RUN_ALL 0
 #define NUM_BINS 500
 #define NUM_VARS 12
 #define NUM_VARS_PRINT 12
@@ -25,7 +27,7 @@ using namespace std;
 #define UP_LIM(i)     stod(info[i][4])	// also converts to number
 
 // root 'comparing_sim_data("filename") <- to run from commandline
-void 			comparing_sim_data(string run_number, string pdf_name = "c1")
+static void 	compare(string run_number, string pdf_name)
 {
 	string	moms((stoi(run_number) > 12083) ? "5.202" : "5.9"); // momentums from logbook
 
@@ -119,4 +121,18 @@ void 			comparing_sim_data(string run_number, string pdf_name = "c1")
 
 		delete comparison_hist;
 	}
+}
+
+void 			comparing_sim_data(string run_number, string pdf_name = "c1")
+{
+	string	runs[NUM_PARAMS] = {"12080", "12083", "13133", "13136", "13854"};
+	if (stod(run_number) == RUN_ALL)
+	{
+		for(size_t i = 0; i < NUM_FILES; ++i)
+		{
+			compare(runs[i], "run_" + runs[i]);
+		}
+	}
+	else
+		compare(run_number, pdf_name);
 }
