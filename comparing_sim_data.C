@@ -55,8 +55,8 @@ void 			comparing_sim_data(string pdf_name = "c1")
 
 	// string	exp_cut = "";
 	// string	sim_cut = "";
-	string	exp_cut = "0 < H.kin.primary.W && H.kin.primary.W < 1.1";
-	string	sim_cut = "0 < W && W < 1.1";
+	string	exp_cut = "(H.kin.primary.W - 0.938) < 0.04";
+	string	sim_cut = "(W - 0.938) < 0.04";
 
 	// loads the root files
 	TFile		*exp_data = TFile::Open(EXP_FILE);
