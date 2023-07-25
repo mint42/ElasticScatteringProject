@@ -10,9 +10,6 @@
 
 using namespace std;
 
-#define SIM_FILE "../sim/worksim/run_13133.root"
-#define EXP_FILE "hms_files/Pion_hms_replay_production_13133_-1.root"
-
 // Real Runs: 12080 12083 13092 13133 13137 13854
 // Dummy Runs: 13094 13136 13857 <- dont have simulation files
 // run 13137 is broken
@@ -28,7 +25,7 @@ using namespace std;
 #define UP_LIM(i)     stod(info[i][4])	// also converts to number
 
 // root 'comparing_sim_data("filename") <- to run from commandline
-void 			comparing_sim_data(string pdf_name = "c1")
+void 			comparing_sim_data(string run_number, string pdf_name = "c1")
 {
 	// hist name, simulated data's variable name, experimental data's variable name, min cut, max cut, lower bound, upper bound
 	string	info[NUM_VARS][NUM_PARAMS] =
@@ -50,8 +47,10 @@ void 			comparing_sim_data(string pdf_name = "c1")
 	string	sim_cut = "(W - 0.938) < 0.04";
 
 	// loads the root files
-	TFile		*exp_data = TFile::Open(EXP_FILE);
-	TFile		*sim_data = TFile::Open(SIM_FILE);
+	string	sim_file_path("../sim/worksim/run_");
+	string	exp_file_path("hms_files/Pion_hms_replay_production_");
+	TFile	*exp_data = TFile::Open((exp_file_path + run_number + "_-1.root").c_str());
+	TFile	*sim_data = TFile::Open((sim_file_path + run_number + ".root").c_str());
 
 	// load trees from files
 	TTree		*exp_tree;
