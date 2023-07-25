@@ -26,7 +26,7 @@ using namespace std;
 
 #define NUM_BINS 500
 #define NUM_VARS 11
-#define NUM_VARS_PRINT 1
+#define NUM_VARS_PRINT 11
 #define NUM_PARAMS 5
 #define HIST_NAMES(i)	info[i][0]
 #define SIM_VARS(i)	info[i][1]
