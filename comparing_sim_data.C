@@ -18,7 +18,7 @@ using namespace std;
 #define RUN_ALL 0
 #define NUM_BINS 500
 #define NUM_VARS 12
-#define NUM_VARS_PRINT 12
+#define NUM_VARS_PRINT 1
 #define NUM_PARAMS 5
 #define HIST_NAMES(i) info[i][0]
 #define SIM_VARS(i)   info[i][1]
@@ -34,8 +34,8 @@ static void 	compare(string run_number, string pdf_name)
 	// hist name, simulated data's variable name, experimental data's variable name, min cut, max cut, lower bound, upper bound
 	string	info[NUM_VARS][NUM_PARAMS] =
 	{
+        "P",                "((hsdelta/100) + 1)*" + moms, "((H.gtr.dp/100)+1)*" + moms,      "0",  "10",
         "W",                "W",               "H.kin.primary.W",       "0",    "2",
-        "P",                "hsdelta*" + moms, "H.gtr.dp*" + moms,      "-15",  "15",
         "delta",            "hsdelta",         "H.gtr.dp",              "-15",  "15",
         "x focal plane",    "hsxfp",           "H.dc.x_fp",             "-40",  "40",
         "y focal plane",    "hsyfp",           "H.dc.y_fp",             "-40",  "40",
