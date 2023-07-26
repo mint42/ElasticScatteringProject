@@ -14,11 +14,12 @@ using namespace std;
 // Dummy Runs: 13094 13136 13857
 // run 13137 is broken
 
+#define NORMFAC (740000000)
 #define NUM_FILES 5
 #define RUN_ALL 0
 #define NUM_BINS 500
-#define NUM_VARS 12
-#define NUM_VARS_PRINT 1
+#define NUM_VARS 11
+#define NUM_VARS_PRINT 11
 #define NUM_PARAMS 5
 #define HIST_NAMES(i) info[i][0]
 #define SIM_VARS(i)   info[i][1]
@@ -34,22 +35,24 @@ static void 	compare(string run_number, string pdf_name)
 	// hist name, simulated data's variable name, experimental data's variable name, min cut, max cut, lower bound, upper bound
 	string	info[NUM_VARS][NUM_PARAMS] =
 	{
-        "P",                "((hsdelta/100) + 1)*" + moms, "((H.gtr.dp/100)+1)*" + moms,      "0",  "10",
-        "W",                "W",               "H.kin.primary.W",       "0",    "2",
-        "delta",            "hsdelta",         "H.gtr.dp",              "-15",  "15",
-        "x focal plane",    "hsxfp",           "H.dc.x_fp",             "-40",  "40",
-        "y focal plane",    "hsyfp",           "H.dc.y_fp",             "-40",  "40",
-        "xp focal plane",   "hsxpfp",          "H.dc.xp_fp",            "-.25", ".25",
-        "yp focal plane",   "hsypfp",          "H.dc.yp_fp",            "-.25", ".25",
-        "target hrz angle", "hsxptar",         "H.gtr.ph",              "-1",   "1",
-        "target vrt angle", "hsyptar",         "H.gtr.th",              "-1.5", "1.5",
-        "nu",               "nu",              "H.kin.primary.nu",      "0",    "10",
-        "Q^2",              "Q2",              "H.kin.primary.Q2",      "0",    "10",
-        "epsilon",          "epsilon",         "H.kin.primary.epsilon", "0",    "1"
+//      "P",                "((hsdelta/100) + 1)*" + moms, "((H.gtr.dp/100)+1)*" + moms, "0",  "10",
+ //     "other P",          "((hsdelta/100) + 1)*" + moms, "H.gtr.p",                    "0",  "10",
+        "W",                "W",                           "H.kin.primary.W",            "0",    "2",
+        "delta",            "hsdelta",                     "H.gtr.dp",                   "-15",  "15",
+        "x focal plane",    "hsxfp",                       "H.dc.x_fp",                  "-40",  "40",
+        "y focal plane",    "hsyfp",                       "H.dc.y_fp",                  "-40",  "40",
+        "xp focal plane",   "hsxpfp",                      "H.dc.xp_fp",                 "-.25", ".25",
+        "yp focal plane",   "hsypfp",                      "H.dc.yp_fp",                 "-.25", ".25",
+        "target hrz angle", "hsxptar",                     "H.gtr.ph",                   "-1",   "1",
+        "target vrt angle", "hsyptar",                     "H.gtr.th",                   "-1.5", "1.5",
+        "nu",               "nu",                          "H.kin.primary.nu",           "0",    "10",
+        "Q^2",              "Q2",                          "H.kin.primary.Q2",           "0",    "10",
+        "epsilon",          "epsilon",                     "H.kin.primary.epsilon",      "0",    "1"
 	};
 
 	string	exp_cut = "(H.kin.primary.W - 0.938) < 0.04";
 	string	sim_cut = "(W - 0.938) < 0.04";
+//	string	exp_cuts = "abs(H.kin.primary.W - 0.938) < 0.040 && abs(H.gtr.beta - 1) < 0.3 && H.cer.npeSum > 1.5 && abs(H.gtr.dp) < 8 && abs(H.dc.xp) < 0.08 && abs(H.dc.yp) < 0.045";
 
 	// loads the root files
 	string	sim_file_path("../sim/worksim/run_");
@@ -72,11 +75,27 @@ static void 	compare(string run_number, string pdf_name)
 
 		// draw vars with "graph off". " >> hist" writes to a histogram in the gDir
 		exp_tree->Draw((EXP_VARS(i) + " >> hist(NUM_BINS)").c_str(), exp_cut.c_str(), "goff");
-		sim_tree->Draw((SIM_VARS(i) + " >> hist2(NUM_BINS)").c_str(), sim_cut.c_str(), "goff");
+//		sim_tree->Draw((SIM_VARS(i) + " >> hist2(NUM_BINS)").c_str(), sim_cut.c_str(), "goff");
 
 		// grab hists
 		TH1D	*exp_hist = (TH1D*)gDirectory->Get("hist");
-		TH1D	*sim_hist = (TH1D*)gDirectory->Get("hist2");
+//		TH1D	*sim_hist = (TH1D*)gDirectory->Get("hist2");
+		TH1D	*sim_hist;
+
+		Double_t	sim_var;
+		TBranch		*b_sim_var;
+		sim_tree->SetBranchAddress(SIM_VARS(i), &sim_vars, &b_sim_vars);
+		Double_t	sim_weight;
+		TBranch		*b_weight;
+		sim_tree->SetBranchAddress("Weight", &sim_weight, &b_sim_weight);
+	
+		Long64_t	nentries = sim_tree->GetEntriesFast();
+	
+		for (Int_t i = 0; i < nentries; ++i)
+		{
+			sim_tree->GetEntry(i);
+			sim_hist->Fill(sim_var, sim_weight*NORMFAC/nentries);
+		}
 
 		// set colors
 		exp_hist->SetLineColor(kBlue);
