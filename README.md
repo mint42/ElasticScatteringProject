@@ -4,20 +4,20 @@ This repository serves as a log for my undergraduate thesis project which is wor
 
 ## Background on the Experiment
 
-This project exists as a small part of the PION LT experiment that's ongoing at JLab. High energy electrons are shot on liquid hydrogen target in order to study the structure of the proton.
+This project exists as a small part of the PION LT experiment at JLab. High energy electrons are shot on a liquid hydrogen target in order to study the structure of the proton.
 
 ## Analysis Process Overview
 
 Cuts were placed on the experimental data to control for good momentum elastic reactions, and to account for dead time and bream trips. This was compared against the Mott cross-section with a consideration for proton form factor (elastic and magnetic).
 
-SIMC is currently being used to find the solid angle.
+SIMC was used to map simulated scattering events to my data so that the solid angle could be extracted for each run.
 
 ## Future Corrections
 
-- Correcting events using dummy runs.
-- Radiating corrective 
-- Tracking efficiency 
-- Dead time ~20%
+- Correcting events using dummy runs (in progress)
+- Radiative corrections
+- Tracking efficiency
+- Dead time
 - Vertex tracking
 
 ## AUTHOR
